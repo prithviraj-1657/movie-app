@@ -1,5 +1,9 @@
 const API_KEY = "8167ac8c";
 
+let allMovies = [];
+let displayedMovies = [];
+let favorites = [];
+
 async function searchMovie() {
     const query = document.getElementById("searchInput").value;
     const moviesDiv = document.getElementById("movies");
@@ -20,7 +24,10 @@ async function searchMovie() {
             return;
         }
 
-        displayMovies(data.Search);
+        allMovies = data.Search;
+        displayedMovies = [...allMovies];
+
+        displayMovies(displayedMovies);
     } catch (error) {
         moviesDiv.innerHTML = "Error fetching data";
     }
@@ -30,7 +37,7 @@ function displayMovies(movies) {
     const moviesDiv = document.getElementById("movies");
     moviesDiv.innerHTML = "";
 
-    movies.forEach(movie => {
+    movies.map(movie => {
         const poster = movie.Poster !== "N/A"
             ? movie.Poster
             : "https://via.placeholder.com/150";
@@ -42,8 +49,36 @@ function displayMovies(movies) {
             <img src="${poster}">
             <h3>${movie.Title}</h3>
             <p>${movie.Year}</p>
+            <button onclick="addToFavorites('${movie.imdbID}')">❤️</button>
         `;
 
         moviesDiv.appendChild(div);
     });
+}
+
+function handleFilter() {
+    const year = document.getElementById("yearFilter").value;
+
+    displayedMovies = allMovies.filter(movie => movie.Year === year);
+
+    displayMovies(displayedMovies);
+}
+
+function handleSort() {
+    const value = document.getElementById("sortSelect").value;
+
+    if (value === "asc") {
+        displayedMovies.sort((a, b) => a.Year - b.Year);
+    } else if (value === "desc") {
+        displayedMovies.sort((a, b) => b.Year - a.Year);
+    }
+
+    displayMovies(displayedMovies);
+}
+
+function addToFavorites(id) {
+    if (!favorites.includes(id)) {
+        favorites.push(id);
+        alert("Added to favorites");
+    }
 }

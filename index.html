@@ -13,6 +13,17 @@
         <button onclick="searchMovie()">Search</button>
     </div>
 
+    <div class="controls">
+        <select id="sortSelect" onchange="handleSort()">
+            <option value="">Sort</option>
+            <option value="asc">Year Asc</option>
+            <option value="desc">Year Desc</option>
+        </select>
+
+        <input type="number" id="yearFilter" placeholder="Filter by year">
+        <button onclick="handleFilter()">Filter</button>
+    </div>
+
     <div id="movies"></div>
 
     <script src="script.js"></script>
